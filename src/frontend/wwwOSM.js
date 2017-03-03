@@ -64,6 +64,22 @@ export default function wwwOSM(wwd, WorldWind, osmLayer) {
      * @param entry Polygon object
      */
     var renderPolygon = function(entry){
+
+        var osmID = ["25831919","25331538","-2752947","25831405","32427206","-3029932","72557775"];
+        if ($.inArray(entry.osmid, osmID)  > -1 ){
+          for (var i = 0; i < entry._boundaries[0].length; i++) {
+            //entry._boundaries[0][i]["altitude"] = 0;
+            entry._attributes._interiorColor = null;
+          }
+        }
+        //console.log(entry);
+        //var randValue = Math.floor(Math.random() * (30 - 5 + 1)) + 5;
+        /*if (entry.properties.type_key == "building"){
+          //console.log("yes");
+        } else if (entry.properties.type_key == null) {
+          console.log("no");
+        }*/
+        //entry._boundaries[0][0]["altitude"] = 100;
         entry.visible = true;
         entry._attributes._drawOutline = globals.drawOutlineFlag;
         shapesLayer.addRenderable(entry);
@@ -120,6 +136,7 @@ export default function wwwOSM(wwd, WorldWind, osmLayer) {
 
 
         tile.draw.polygons.forEach(function (entry) {
+          //console.log(entry, entry.typeId);
             if (isGeomEnabled(globals.POLYGON, entry.typeId)){
                 if (!isHighlighted(entry.osmid)){
                     renderPolygon(entry);
@@ -211,7 +228,7 @@ export default function wwwOSM(wwd, WorldWind, osmLayer) {
             /**
              * Internal use
              */
-            var do1 = function(tile){ 
+            var do1 = function(tile){
                 storeTile(tile);
                 fun_a(tile);
             }
@@ -224,6 +241,7 @@ export default function wwwOSM(wwd, WorldWind, osmLayer) {
                     var found = false;
                     for (var i in currentLayer.currentTiles){
                         if (currentLayer.currentTiles[i].tileKey === activeTiles[j].tileKey){
+                          //console.log(currentLayer.currentTiles[i]);
                             found = true;
                             break;
                         }
@@ -253,6 +271,7 @@ export default function wwwOSM(wwd, WorldWind, osmLayer) {
                 if (found){
                     fun_a(tile);
                 } else {
+                  //console.log(tile);
                     getTileFromServer(tile);
                 }
             }
@@ -294,6 +313,7 @@ export default function wwwOSM(wwd, WorldWind, osmLayer) {
 
             for (var i in currentLayer.currentTiles){
                 tile = currentLayer.currentTiles[i];
+                //console.log(tile);
 
                 if (isTileActive(tile)) {
                     fun_b();
@@ -378,7 +398,7 @@ export default function wwwOSM(wwd, WorldWind, osmLayer) {
             wwd.redraw(); // redraw to make the highlighting changes take effect on the screen
         }
     };
-    
+
     wwd.addEventListener("dblclick", handlePick);
 
     /**
@@ -401,4 +421,3 @@ export default function wwwOSM(wwd, WorldWind, osmLayer) {
         return this.charAt(0).toUpperCase() + this.slice(1);
     }
 }
-
